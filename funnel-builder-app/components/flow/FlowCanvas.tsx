@@ -1,26 +1,34 @@
 "use client"
 
-import React from "react"
+import { useState, useCallback } from "react"
 
 import ReactFlow, {
+    applyNodeChanges,
+    applyEdgeChanges,
+    addEdge,
     Background,
     Controls,
     MiniMap,
+    NodeChange,
+    EdgeChange,
+    Edge
 } from "reactflow"
 
 import AdNode from "./nodes/AdNode"
 import LandingNode from "./nodes/LandingNode"
 import FormNode from "./nodes/FormNode"
 import CheckoutNode from "./nodes/CheckoutNode"
+import { FlowNode } from "@/types/flow"
 
 const nodeTypes = {
     ad: AdNode,
     land: LandingNode,
     form: FormNode,
-    check: CheckoutNode
+    check: CheckoutNode,
 }
 
-const nodes = [
+
+const initialNodes: FlowNode[] = [
     {
         id: "1",
         type: "ad",
@@ -61,18 +69,41 @@ const nodes = [
             purchases: 320
         }
     },
-
-
-
 ]
 
-const edges: any[] = []
+const initialEdges: Edge[] = []
 
 
 export default function FlowCanvas() {
+
+    const [nodes, setNodes] = useState<FlowNode[]>(initialNodes);
+    const [edges, setEdges] = useState<Edge[]>(initialEdges);
+
+    const onNodesChange = useCallback(
+        (changes: NodeChange[]) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot as any) as FlowNode[]),
+        [],
+    );
+
+    const onEdgesChange = useCallback(
+        (changes: EdgeChange[]) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
+        [],
+    );
+
+    const onConnect = useCallback(
+        (params: any) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+        [],
+    );
+
     return (
         <div className="w-full h-screen">
-            <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes}>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                nodeTypes={nodeTypes}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+            >
                 <Background />
                 <Controls />
                 <MiniMap />
