@@ -1,113 +1,109 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useCallback } from "react"
 
 import ReactFlow, {
     applyNodeChanges,
     applyEdgeChanges,
-    addEdge,
     Background,
     Controls,
     MiniMap,
     NodeChange,
     EdgeChange,
-    Edge
+    Node,
 } from "reactflow"
 
 import AdNode from "./nodes/AdNode"
 import LandingNode from "./nodes/LandingNode"
 import FormNode from "./nodes/FormNode"
 import CheckoutNode from "./nodes/CheckoutNode"
+import CustomNode from "./nodes/CustomNode"
+import DefaultEdge from "./edges/DefaultEdge"
+import NodeEditor from "@/components/sidebar/NodeEditor"
+import { useFlowStore } from "@/store/useFlowStore"
 import { FlowNode } from "@/types/flow"
 
 const nodeTypes = {
     ad: AdNode,
-    land: LandingNode,
+    landing: LandingNode,
     form: FormNode,
-    check: CheckoutNode,
+    checkout: CheckoutNode,
+    custom: CustomNode
 }
 
-
-const initialNodes: FlowNode[] = [
-    {
-        id: "1",
-        type: "ad",
-        position: { x: 100, y: 100 },
-        data: {
-            label: "Anúncio",
-            impressions: 5000,
-            clicks: 800
-        }
-    },
-    {
-        id: "2",
-        type: "land",
-        position: { x: 350, y: 100 },
-        data: {
-            label: "Landing Page",
-            visits: 800,
-            leads: 320
-        }
-    },
-    {
-        id: "3",
-        type: "form",
-        position: { x: 600, y: 100 },
-        data: {
-            label: "Formulário",
-            registrations: 150,
-            submissions: 320
-        }
-    },
-    {
-        id: "4",
-        type: "check",
-        position: { x: 850, y: 100 },
-        data: {
-            label: "Checkout",
-            started: 150,
-            purchases: 320
-        }
-    },
-]
-
-const initialEdges: Edge[] = []
-
+const edgeTypes = {
+    default: DefaultEdge
+}
 
 export default function FlowCanvas() {
-
-    const [nodes, setNodes] = useState<FlowNode[]>(initialNodes);
-    const [edges, setEdges] = useState<Edge[]>(initialEdges);
+    const { nodes, edges, setNodes, setEdges, addEdge, updateNode, removeNode, selectedNode, setSelectedNode } = useFlowStore()
 
     const onNodesChange = useCallback(
-        (changes: NodeChange[]) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot as any) as FlowNode[]),
-        [],
+        (changes: NodeChange[]) => setNodes(applyNodeChanges(changes, nodes as any) as any),
+        [nodes, setNodes],
     );
 
     const onEdgesChange = useCallback(
-        (changes: EdgeChange[]) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-        [],
+        (changes: EdgeChange[]) => setEdges(applyEdgeChanges(changes, edges)),
+        [edges, setEdges],
     );
 
     const onConnect = useCallback(
-        (params: any) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
-        [],
+        (params: any) => {
+            const newEdge = {
+                ...params,
+                id: `edge-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+            }
+            addEdge(newEdge)
+        },
+        [addEdge],
     );
 
+    const onNodeClick = useCallback((_: any, node: Node) => {
+        setSelectedNode(node as FlowNode)
+    }, [])
+
+    const closeEditor = () => setSelectedNode(null)
+
+    const handleCloseEditor = () => setSelectedNode(null)
+
+    const handleSave = (nodeId: string, data: any) => {
+        updateNode(nodeId, { data })
+        setSelectedNode(null)
+    }
+
+    const handleDelete = (nodeId: string) => {
+        removeNode(nodeId)
+        setSelectedNode(null)
+    }
+
     return (
-        <div className="w-full h-screen">
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                nodeTypes={nodeTypes}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-            >
-                <Background />
-                <Controls />
-                <MiniMap />
-            </ReactFlow>
+        <div className="w-full h-full flex">
+            <div className="flex-1 h-full relative">
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
+                    onNodeClick={onNodeClick}
+                >
+                    <Background />
+                    <Controls />
+                    <MiniMap />
+                </ReactFlow>
+            </div>
+
+            <div className="w-80 p-2 absolute right-0 top-0 ">
+                <NodeEditor
+                    selectedNode={selectedNode}
+                    onClose={handleCloseEditor}
+                    onSave={handleSave}
+                    onDelete={handleDelete}
+                />
+            </div>
         </div>
     )
 }
