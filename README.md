@@ -8,7 +8,10 @@ O usuário pode montar etapas do funil (como anúncio, landing page, formulário
 
 ## 🎥 Demonstração
 
-![demo](./public/demo.mp4)
+
+[![Assista ao vídeo](funnel-builder-app/public/demo.gif)](https://drive.google.com/file/d/1zwh115Iyq2v2iREr3BeLH5uiP7gMC9IM/view?usp=sharing)
+
+Demonstração Completa: [Demo.mp4](https://drive.google.com/file/d/1zwh115Iyq2v2iREr3BeLH5uiP7gMC9IM/view?usp=sharing)
 
 ---
 
