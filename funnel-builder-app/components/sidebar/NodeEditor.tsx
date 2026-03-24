@@ -30,8 +30,11 @@ export default function NodeEditor({ selectedNode, onClose, onSave, onDelete }: 
 
     const inputText = (key: string, label: string) => (
         <div className="space-y-1 font-family-poppins">
-            <Label className="text-sm">{label}</Label>
+            <Label className="text-sm" htmlFor={`edit-text-field-${label}`}>
+                {label}
+            </Label>
             <Input
+                id={`edit-text-field-${label}`}
                 value={editedData[key] ?? ""}
                 onChange={(e) => setEditedData((prev: any) => ({ ...prev, [key]: e.target.value }))}
             />
@@ -71,8 +74,11 @@ export default function NodeEditor({ selectedNode, onClose, onSave, onDelete }: 
 
                 return (
                     <div key={key} className="space-y-1 font-family-poppins">
-                        <Label className="text-sm">{label}</Label>
+                        <Label className="text-sm" htmlFor={`edit-number-field-${value}`}>
+                            {label}
+                        </Label>
                         <Input
+                            id={`edit-number-field-${value}`}
                             type="number"
                             value={editedData[key] ?? ""}
                             onChange={(e) => setEditedData((prev: any) => ({ ...prev, [key]: Number(e.target.value) }))}
@@ -84,8 +90,11 @@ export default function NodeEditor({ selectedNode, onClose, onSave, onDelete }: 
             if (typeof value === "number") {
                 return (
                     <div key={key} className="space-y-1 font-family-poppins">
-                        <Label className="text-sm">{key.charAt(0).toUpperCase() + key.slice(1)}</Label>
+                        <Label className="text-sm" htmlFor={`edit-number-field-${value}`}>
+                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                        </Label>
                         <Input
+                            id={`edit-number-field-${value}`}
                             type="number"
                             value={editedData[key] ?? ""}
                             onChange={(e) => setEditedData((prev: any) => ({ ...prev, [key]: Number(e.target.value) }))}
@@ -96,8 +105,11 @@ export default function NodeEditor({ selectedNode, onClose, onSave, onDelete }: 
 
             return (
                 <div key={key} className="space-y-1 font-family-poppins">
-                    <Label className="text-sm">{key.charAt(0).toUpperCase() + key.slice(1)}</Label>
+                    <Label className="text-sm" htmlFor={`edit-text-field-${value}`}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </Label>
                     <Input
+                        id={`edit-text-field-${value}`}
                         value={editedData[key] ?? ""}
                         onChange={(e) => setEditedData((prev: any) => ({ ...prev, [key]: e.target.value }))}
                     />
