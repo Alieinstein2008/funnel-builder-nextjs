@@ -2,11 +2,12 @@
 
 import { useState } from "react"
 import { Card } from "@/components/ui/card"
-import { useFlowStore, FlowNode } from "@/store/useFlowStore"
+import { useFlowStore } from "@/store/useFlowStore"
 import * as LucideIcons from "lucide-react"
 import CustomNodeDialog from "../flow/controls/CustomNodeDialog"
 import { v4 as uuidv4 } from 'uuid';
 import { DEFAULT_INITIAL_STEPS } from "@/lib/constants"
+import { FlowNode } from "@/types/flow"
 
 const initialSteps = DEFAULT_INITIAL_STEPS
 
