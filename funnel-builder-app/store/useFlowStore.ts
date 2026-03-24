@@ -7,9 +7,11 @@ import { v4 as uuidv4 } from 'uuid'
 interface FlowState {
   nodes: FlowNode[]
   edges: Edge[]
+  selectedNode: FlowNode | null
   isEditorOpen: boolean
   setNodes: (nodes: FlowNode[]) => void
   setEdges: (edges: Edge[]) => void
+  setSelectedNode: (node: FlowNode | null) => void
   addNode: (node: FlowNode) => void
   addEdge: (edge: Edge) => void
   removeNode: (nodeId: string) => void
@@ -25,10 +27,12 @@ export const useFlowStore = create<FlowState>()(
     (set, get) => ({
       nodes: [],
       edges: [],
+      selectedNode: null,
       isEditorOpen: false,
       
       setNodes: (nodes) => set({ nodes }),
       setEdges: (edges) => set({ edges }),
+      setSelectedNode: (node) => set({ selectedNode: node }),
       
       addNode: (node) =>
         set((state) => ({
