@@ -21,7 +21,7 @@ Demonstração Completa: [Demo.mp4](https://drive.google.com/file/d/1zwh115Iyq2v
 * Conectar etapas entre si
 * Visualizar fluxo completo
 * Editar dados de cada etapa
-* Persistência no navegador (localStorage)
+* Persistência no navegador (localStorage com zustand)
 * Interface intuitiva e responsiva
 
 ---
